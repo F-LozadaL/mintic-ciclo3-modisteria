@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>D'Gala Uniformes</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    
+    <!-- proyectos estilos -->
+    <link rel="stylesheet" href="css/navbar.css">
+</head>
+
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+
+        <!-- HEADER- Social media, help links -->
+        <!-- <div th:insert="layout/header :: header-socials-help"></div> -->
+
+        <!-- HEADER- Logo y barra de busqueda -->
+        <div th:insert="layout/header :: header-search"></div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid">
+        <div class="row border-top px-xl-5">
+
+            <!-- NAVBAR - categories -->
+            <div th:replace="layout/navbar :: navbar-categories"></div>
+
+            <div class="col-lg-9">
+                <!-- NAVBAR- barra de navegacion a otras paginas-->
+                <div th:insert="layout/navbar :: navbar-links"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Nuestra Tienda</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="/index">Inicio</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Tienda</p>
+            </div>
+        </div>
+    </div> 
+    <!-- Page Header End -->
+
+
+    <!-- Shop Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <!-- Shop Sidebar Start -->
+            <div class="col-lg-3 col-md-12">
+                <!-- TEST Start -->
+                <form id="filtros" action="/shop">
+                    <div th:each="filtro,iterStat :${filtros}"
+                        th:classappend="${!iterStat.last}? 'border-bottom mb-4 pb-4' : 'mb-5'">
+                        <h5 class="font-weight-semi-bold mb-4" th:inline="text"> Filtrar por [[${filtro.nombre}]]</h5>
+
+                        <div th:each="item : ${filtro.items}"
+                            class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" th:checked="${item.checked}" th:name="${item.name}" class="custom-control-input"
+                                th:value="${item.value}" th:id="${item.value}">
+                            <label class="custom-control-label" th:for="${item.value}" th:text="${item.tag}">All
+                                Precio</label>
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Shop Sidebar End -->
+
+
+            <!-- Shop Product Start -->
+            <div class="col-lg-9 col-md-12">
+                <div class="row pb-3">
+                    <div class="col-12 pb-1">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <form action="">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Buscar por nombre">
+                                    <div class="input-group-append">
+
+                                        <button type="submit" form="filtros"
+                                            class="input-group-text bg-transparent text-primary">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- test -->
+                            
+                            <div class="dropdown ml-4">
+                                <button class="btn border dropdown-toggle" type="button" id="triggerId"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Filtrar por
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- START - productos de catalogo -->
+                    <div th:if="${productos.isEmpty()}">
+                        <p>No Hay Productos que Cumplan los Filtros</p>
+                    </div>
+
+                    
+                    <!-- col-12 pb-1 -->
+                    <!-- CARTAS DE RPRODUCTOS -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1" th:if="${!productos.isEmpty()}"
+                        th:each="producto: ${productos}">
+                        <div class="card product-item border-0 mb-4">
+                            <div
+                                class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100"
+                                    th:src="${producto.imageUrl != null ? producto.imageUrl : '/img/noimage.jpg' }"
+                                    alt="">
+                            </div>
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <!-- NOMBRE -->
+                                <h6 class="text-truncate mb-3" th:text="${producto.nombre}"> Nombre producto</h6>
+                                <div class="d-flex justify-content-center">
+                                    <!-- PRECIOS -->
+                                    <h6>$
+                                        <span th:text="${#numbers.formatDecimal(producto.precio,1,'POINT',2,'COMMA')}">
+                                            precio </span>
+                                    </h6>
+                                    <h6 class="text-muted ml-2">$ <del
+                                            th:text="${#numbers.formatDecimal(producto.precio,1,'POINT',2,'COMMA')}">precio
+                                            sin descuento</del></h6>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+
+                                <a href="/detail" class="btn btn-sm text-dark p-0"><i
+                                        class="fas fa-eye text-primary mr-1"></i>Ver detalle</a>
+                                <a href="" th:onclick="addToCart([[${producto.id}]]);" class="btn btn-sm text-dark p-0"><i
+                                        class="fas fa-shopping-cart text-primary mr-1"></i>Agregar al carrito</a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END - productos de catalogo -->
+
+                    <div class="col-12 pb-1">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center mb-3">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Anterior</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Siguiente</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Shop Product End -->
+        </div>
+    </div>
+    <!-- Shop End -->
+
+
+    <!-- Footer Start -->
+    <div th:insert="layout/footer :: footer"></div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="js/catalogo.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>
